@@ -1,0 +1,38 @@
+/* general style */
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+/* general style end*/
+
+/* header style */
+
+/* header style end */
+
+/* background style */
+  body {
+    background-color: #ddd;
+  }
+/* background style end */
+
+/* form style */
+  .form-container {
+    width: 400px;
+    height: auto;
+    background-color: #fff;
+  }
+  .form-style {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .form-item {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+  .form-item label, .form-item input, .form-item button {
+    width: 90%;
+  }
+/* form style end */
