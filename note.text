@@ -1,3 +1,117 @@
-git remote add origin https://github.com/Sheyzie/SendHelp.git
-git branch -M main
-git push -u origin main
+-- Database migration script --
+
+1. first install the required sql database driver in this case mysql2 :
+
+  npm i mysql2
+
+2. install the libary required for the migration in this case knex :
+
+  npm i knex
+
+3. enter the following code in the terminal to initialize knex and create a knexfile.js in the working folder :
+
+  npx knex init
+
+4. delete the staging and production key of the module.export object since we won't be doing that for now
+
+5. change the client key to your respective sql driver. in my case 'mysql2'
+
+6. set up the connection key with mysql connection object and configure .env using :
+
+  //importing dependenncies
+  require("dotenv").config();
+
+  connection: {
+    host: process.env.DB_HOST,
+    port: 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+  }
+
+7. create a migration file that will hold you migration script using the code below in the terminal :
+
+  npx knex migrate:make <table_name>
+
+  note: we pass in table name because we want to create table. tablename has no importance in the code other than a file name.
+
+8. a migration folder will be created automatically in the working folder carrying the file(migration file) prepended by series of numbers which are timestamps
+
+  note: the timestamps are responsible for making sure that the tables are created in their intended order. the file will hold our javascript code to create tables which will betranslated into sql code.
+
+9. open the migration file and write the javascript code to create table in the export.up function and to drop table in the export.down funtion using :
+
+  /**
+  * @param { import("knex").Knex } knex
+  * @returns { Promise<void> }
+  */
+  exports.up = async knex => {
+    console.log('initialising database...')
+    console.log('creating tables...')
+    return await knex.schema.createTableIfNotExists('buyers', table => {
+      table.increments('buyer_id').primary();
+      table.string('first_name').notNullable();
+      table.string('last_name').notNullable();
+      table.string('email').notNullable().unique();
+      table.string('password_hash').notNullable();
+      table.string('phone_number').notNullable();
+      table.string('country').notNullable();
+      table.string('state').notNullable();
+      table.string('LGA').notNullable();
+      table.string('address').notNullable();
+      table.string('terms').notNullable();
+      table.string('status').notNullable();
+      // table.timestamp('created_at').defaultTo(knex.fn.now());
+      // table.timestamp('updated_at').defaultTo(knex.fn.now());
+    })
+  };
+
+  /**
+  * @param { import("knex").Knex } knex
+  * @returns { Promise<void> }
+  */
+  exports.down = async knex => {
+    return await knex.schema.dropTable('buyers');
+  };
+
+10. repeat step 7 to 9 to create other tables needed
+
+11. after creating all necessary tables and setting up configurations, call the below code from the terminal to carry out migration :
+
+  npx knex migrate:latest
+
+12. warning: Use async .hasTable to check if table exists and then use plain .createTable. Since .createTableIfNotExists actually just generates plain "CREATE TABLE IF NOT EXIST..." query it will not work correctly if there are any alter table queries generated for columns afterwards. To not break old migrations this function is left untouched for now, but it should not be used when writing new code and it is removed from documentation.
+
+  SOLUTION: 
+    exports.up = async knex => {
+      console.log('checking if buyers tables exists...');
+      try {
+        const exists = await knex.schema.hasTable('buyers'); // returns true or false
+        
+        if(!exists){
+          console.log('creating buyers table...');
+          await knex.schema.createTable('buyers', table => {
+            table.increments('buyer_id').primary();
+            table.string('first_name', 25).notNullable();
+            table.string('last_name', 25).notNullable();
+            table.string('email', 50).notNullable().unique();
+            table.string('password_hash').notNullable();
+            table.string('phone_number', 25).notNullable();
+            table.string('country', 25).notNullable();
+            table.string('state', 25).notNullable();
+            table.string('LGA', 50).notNullable();
+            table.string('address', 200).notNullable();
+            table.string('terms', 10).notNullable();
+            table.string('status', 10).notNullable();
+            // table.timestamp('created_at').defaultTo(knex.fn.now());
+            // table.timestamp('updated_at').defaultTo(knex.fn.now());
+          })
+          console.log('buyers table created successfully');
+        } else {
+          console.log('buyers table exists in database');
+        }
+      }catch (error){
+        console.log('Error creating buyers table');
+        console.error(error);
+      }
+    };
