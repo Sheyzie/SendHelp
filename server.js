@@ -49,10 +49,13 @@ app.use("/sendhelp/api/admin", require("./routes/adminRoutes"));
 // app.use("/sendhelp/api/req/provider", require("./routes/providerReqRoutes"));
 // app.use("/sendhelp/api/req/admin", require("./routes/adminReqRoutes"));
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "signup.html"));
+});
 //start up the server
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on http://127.0.0.1:${process.env.PORT}`);

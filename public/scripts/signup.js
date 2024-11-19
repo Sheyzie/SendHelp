@@ -10,6 +10,7 @@ const country = document.getElementById("country");
 const state = document.getElementById("state");
 const LGA = document.getElementById("LGA");
 const address = document.getElementById("address");
+const message = document.getElementById('message');
 
 //fetch errorSpan
 const firstNameError = document.getElementById("first-nameError");
@@ -27,20 +28,29 @@ const addressError = document.getElementById("addressError");
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   
+  const terms = confirm('By clicking submit you have accepted our terms and condition')
+  
+  if(!terms){
+    return false;
+  }
   //validate first name field
   if (firstName.value === null || firstName.value === "") {
     displayError("firstName", "First name cannot be empty");
   } else if (firstName.value.length < 2) {
     displayError("firstName", "First name cannot be less than 2");
+  }else if(!isNaN(firstName.value)){
+    displayError("firstName", "First name cannot be number");
   } else {
     setSuccess(firstName);
   }
 
   //validate last name field
   if (lastName.value === null || lastName.value === "") {
-    displayError("lastName", "last name cannot be empty");
+    displayError("lastName", "Last name cannot be empty");
   } else if (lastName.value.length < 2) {
-    displayError("lastName", "last name cannot be less than 2");
+    displayError("lastName", "Last name cannot be less than 2");
+  }else if(!isNaN(lastName.value)){
+    displayError("lastName", "Last name cannot be number");
   } else {
     setSuccess(lastName);
   }
@@ -48,6 +58,8 @@ form.addEventListener("submit", (e) => {
   //validate email field
   if (email.value === null || email.value === "") {
     displayError("email", "Email cannot be empty");
+  } else if(!isNaN(email.value)){
+    displayError("email", "Email cannot be number");
   } else {
     setSuccess(email);
   }
@@ -69,7 +81,7 @@ form.addEventListener("submit", (e) => {
       "confirmPassword",
       "Password cannot be less than 6 characters"
     );
-  } else if (confirmPassword.value === password.value) {
+  } else if (confirmPassword.value != password.value) {
     displayError("confirmPassword", "Passwords do not match");
   } else {
     setSuccess(confirmPassword);
@@ -89,6 +101,8 @@ form.addEventListener("submit", (e) => {
     displayError("country", "Country cannot be empty");
   } else if (country.value.length < 2) {
     displayError("country", "Country cannot be less than 2");
+  } else if(!isNaN(country.value)){
+    displayError("country", "Country cannot be number");
   } else {
     setSuccess(country);
   }
@@ -98,6 +112,8 @@ form.addEventListener("submit", (e) => {
     displayError("state", "State cannot be empty");
   } else if (state.value.length < 2) {
     displayError("state", "State cannot be less than 2");
+  } else if(!isNaN(state.value)){
+    displayError("state", "State cannot be number");
   } else {
     setSuccess(state);
   }
@@ -107,6 +123,8 @@ form.addEventListener("submit", (e) => {
     displayError("LGA", "LGA cannot be empty");
   } else if (LGA.value.length < 2) {
     displayError("LGA", "LGA cannot be less than 2");
+  } else if(!isNaN(LGA.value)){
+    displayError("LGA", "LGA cannot be number");
   } else {
     setSuccess(LGA);
   }
@@ -116,6 +134,8 @@ form.addEventListener("submit", (e) => {
     displayError("address", "Address cannot be empty");
   } else if (address.value.length < 2) {
     displayError("address", "Address cannot be less than 2");
+  } else if(!isNaN(address.value)){
+    displayError("address", "Address cannot be number");
   } else {
     setSuccess(address);
   }
@@ -268,19 +288,20 @@ let isEmail = false;
 let isPassword = false;
 let isConfirmPassword = false;
 let isPhoneNumber = false;
-let isCoountry = false;
+let isCountry = false;
 let isState = false;
 let isLGA = false;
 let isAddress = false
 
+//indicate input with right values
 function setSuccess(field){
   switch (field.name) {
-    case "first-name":
+    case "first_name":
       firstNameError.innerHTML = "";
       field.style.backgroundColor = "lightgreen";
       isFirstName = true
       break;
-    case "last-name":
+    case "last_name":
       lastNameError.innerHTML = "";
       field.style.backgroundColor = "lightgreen";
       islastName = true;
@@ -295,12 +316,12 @@ function setSuccess(field){
       field.style.backgroundColor = "lightgreen";
       isPassword = true;
       break;
-    case "confirm-password":
+    case "confirm_password":
       confirmPasswordError.innerHTML = "";
       field.style.backgroundColor = "lightgreen";
       isConfirmPassword = true;
       break;
-    case "phone-number":
+    case "phone_number":
       phoneNumberError.innerHTML = "";
       field.style.backgroundColor = "lightgreen";
       isPhoneNumber = true
@@ -336,5 +357,68 @@ function setSuccess(field){
       stateError.innerHTML = "";
       LGAError.innerHTML = "";
       addressError.innerHTML = "";
+  }
+
+  isValidated()
+}
+
+async function isValidated (){
+  const validate = await getValidation()
+  console.log(validate)
+  if(!validate){
+    return false;
+  }
+
+  //if all inputs are valid, submit form
+  const fd = new FormData(form);
+  const fdObj = Object.fromEntries(fd);
+
+  //submit form to server
+  try{
+    const response = await fetch('/sendhelp/api/users/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(fdObj)
+    })
+    const data = await response.json()
+    // show success message
+    displayResponse(data.success, data.message)
+    console.log(data.message)
+    
+  } catch (error){
+    console.log(error)
+  }
+  
+}
+
+//check if inputs a validated
+async function getValidation() {
+  if (isFirstName && islastName && isEmail && isPassword && isConfirmPassword && isPhoneNumber && isCountry && isState && isLGA && isAddress){
+    return true;
+  }
+}
+
+function displayResponse(success, text){
+  console.log(success)
+  if(success){
+    message.style.display = 'block'
+    message.style.color = 'green'
+    message.style.backgroundColor = 'lightgreen'
+    message.innerHTML = text
+    setTimeout(() => {
+      message.innerHTML = ''
+      message.style.display = 'none'
+    }, 5000) //set delay for 5secs
+  }else{
+    message.style.display = 'block'
+    message.style.color ='red'
+    message.style.backgroundColor = 'pink'
+    message.innerHTML = text
+    setTimeout(() => {
+      message.innerHTML = ''
+      message.style.display = 'none'
+    }, 5000) //set delay for 5secs
   }
 }

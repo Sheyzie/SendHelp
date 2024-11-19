@@ -22,7 +22,8 @@ router.post(
       
     }), //checking password length
     check("phone_number", "Phone number is required").not().isEmpty(), //checking that name is not empty
-    check("coutry", "Country is required").not().isEmpty(), //checking that name is not empty
+    check("confirm_password", "Phone number is required").not().isEmpty(), //checking that name is not empty
+    check("country", "Country is required").not().isEmpty(), //checking that name is not empty
     check("state", "State is required").not().isEmpty(), //checking that name is not empty
     check("LGA", "LGA is required").not().isEmpty(), //checking that name is not empty
     check("address", "Address is required").not().isEmpty(), //checking that name is not empty

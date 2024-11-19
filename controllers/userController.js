@@ -24,6 +24,7 @@ exports.registerUser = async (req, res) => {
     last_name,
     email,
     password,
+    confirm_password,
     phone_number,
     country,
     state,
@@ -31,6 +32,7 @@ exports.registerUser = async (req, res) => {
     address,
     terms,
   } = req.body; //fetching the input parameter from the request body
+  console.log(req.body)
   try {
     //checking if a user exist in database
     const [user] = await db.execute(
@@ -41,6 +43,7 @@ exports.registerUser = async (req, res) => {
     //statement to check if the email exist
     if (user.length > 0) {
       //if user exist
+      console.log('user: ', user)
       return res
         .status(400)
         .json({ status: 400, success: false, message: "User already exist" });
@@ -53,7 +56,7 @@ exports.registerUser = async (req, res) => {
 
     //insert the user record to the database
     const sql =
-      "INSERT INTO users (first_name, last_name, email, password, phone_number, country, state, LGA, address, terms, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO users (first_name, last_name, email, password_hash, phone_number, country, state, LGA, address, terms, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const value = [
       first_name,
       last_name,
@@ -64,7 +67,7 @@ exports.registerUser = async (req, res) => {
       state,
       LGA,
       address,
-      terms,
+      'Accepted',
       "Active",
     ];
     await db.execute(sql, value);

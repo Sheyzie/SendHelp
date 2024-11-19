@@ -352,6 +352,15 @@ footer {
     border-color: grey;
     background-color: rgb(211, 218, 224);
   }
+
+  #message {
+    font-size: 18px;
+    text-align: center;
+    padding: 10px 0;
+    width: 90%;
+    margin-top: 10px;
+    display: none;
+  }
 /* form style end */
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Send Help</title>
-  <link rel="stylesheet" href="/public/styles/style.css">
+  <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
   <header>
@@ -106,14 +106,14 @@
           <label for="first-name">First Name: *</label>
         </div>
         <div class="form-item">
-          <input type="text" id="first-name" name="first-name">
+          <input type="text" id="first-name" name="first_name">
           <span id="first-nameError"></span>
         </div>
         <div class="form-item">
           <label for="last-name">Last Name: *</label>
         </div>
         <div class="form-item">
-          <input type="text" id="last-name" name="last-name">
+          <input type="text" id="last-name" name="last_name">
           <span id="last-nameError"></span>
         </div>
         <div class="form-item">
@@ -134,14 +134,14 @@
           <label for="confirm-password">Confirm Password: *</label>
         </div>
         <div class="form-item">
-          <input type="password" id="confirm-password" name="confirm-password">
+          <input type="password" id="confirm-password" name="confirm_password">
           <span id="confirm-passwordError"></span>
         </div>
         <div class="form-item">
           <label for="phone-number">Phone Number: *</label>
         </div>
         <div class="form-item">
-          <input type="text" id="phone-number" name="phone-number">
+          <input type="text" id="phone-number" name="phone_number">
           <span id="phone-numberError"></span>
         </div>
         <div class="form-item">
@@ -175,6 +175,9 @@
         <div class="form-item">
           <button type="submit">Sign Up</button>
         </div>
+        <div class="form-item">
+          <div id="message"></div>
+        </div>
         <br>
         <div class="form-item">
           <p>Have an account??? <span><a href="">Log In</a></span></p>
@@ -188,6 +191,6 @@
   </main>
 
   <footer></footer>
-  <script src="/public/scripts/signup.js"></script>
+  <script src="scripts/signup.js"></script>
 </body>
 </html>
