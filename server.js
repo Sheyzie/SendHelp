@@ -45,9 +45,9 @@ app.use("/sendhelp/api/provider", require("./routes/providerRoutes"));
 app.use("/sendhelp/api/admin", require("./routes/adminRoutes"));
 
 //configure request routes
-app.use("/sendhelp/api/req/users", require("./routes/userReqRoutes"));
-app.use("/sendhelp/api/req/provider", require("./routes/providerReqRoutes"));
-app.use("/sendhelp/api/req/admin", require("./routes/adminReqRoutes"));
+// app.use("/sendhelp/api/req/users", require("./routes/userReqRoutes"));
+// app.use("/sendhelp/api/req/provider", require("./routes/providerReqRoutes"));
+// app.use("/sendhelp/api/req/admin", require("./routes/adminReqRoutes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
